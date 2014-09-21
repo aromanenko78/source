@@ -10,6 +10,7 @@
 #include <Wire.h>
 #include "AnalogButtons.h"
 #include "DialServo.h"
+#include "Heater.h"
 #include "LowPassFilter.h"
 #include "MedianFilter.h"
 
