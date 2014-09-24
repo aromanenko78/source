@@ -6,11 +6,13 @@
 #include <Time.h>
 #include <Wire.h>
 #include "DialServo.h"
+#include "Encoder.h"
 #include "Heater.h"
 #include "LowPassFilter.h"
 #include "MedianFilter.h"
 
 Heater heater;
+Encoder encoder;
 LiquidCrystal lcd(11, 12, 4, 5, 6, 7);
 
 void setup() {
@@ -23,6 +25,7 @@ void setup() {
   Serial.println("Ready");
 
   heater.init();
+  encoder.init();
 }
 
 void loop() {
