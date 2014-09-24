@@ -6,12 +6,38 @@ Heater::Heater() :
     adjustment_counter(0),
     oneWire(ONE_WIRE_BUS),
     sensors(&oneWire),
-    heat_dial_servo((int[])HEAT_CLICKS, MIN_HEAT + .5, MAX_HEAT, HEAT_SERVO_PIN),
-    flow_dial_servo((int[])FLOW_CLICKS, MIN_FLOW + 1.5, MAX_FLOW, FLOW_SERVO_PIN),
+    heat_dial_servo(heat_clicks, MIN_HEAT + .5, MAX_HEAT, HEAT_SERVO_PIN),
+    flow_dial_servo(flow_clicks, MIN_FLOW + 1.5, MAX_FLOW, FLOW_SERVO_PIN),
     vent_temp_lpf(.1),
     int_temp_lpf(.05),
     heat_dial_lpf(.08),
     flow_dial_lpf(.08) {
+
+  heat_clicks[0] = 0;
+  heat_clicks[1] = 7;
+  heat_clicks[2] = 17;
+  heat_clicks[3] = 27;
+  heat_clicks[4] = 39;
+  heat_clicks[5] = 53;
+  heat_clicks[6] = 65;
+  heat_clicks[7] = 77;
+  heat_clicks[8] = 90;
+  heat_clicks[9] = 103;
+  heat_clicks[10] = 115;
+  heat_clicks[11] = 128;
+  heat_clicks[12] = 139;
+  heat_clicks[13] = 150;
+
+  flow_clicks[0] = 10;
+  flow_clicks[1] = 37;
+  flow_clicks[2] = 48;
+  flow_clicks[3] = 63;
+  flow_clicks[4] = 77;
+  flow_clicks[5] = 89;
+  flow_clicks[6] = 101;
+  flow_clicks[7] = 114;
+  flow_clicks[8] = 131;
+  flow_clicks[9] = 145;
 }
 
 void Heater::init() {
@@ -161,7 +187,7 @@ int Heater::getHeatDialPosition() {
   return int(heat_dial);
 }
 
-void Heater::traceToSerial() {
+void Heater::trace() {
   Serial.print(millis());
   Serial.print(",");
   Serial.print(int_temp_lpf.getUnfiltered());

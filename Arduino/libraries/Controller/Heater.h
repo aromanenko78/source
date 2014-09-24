@@ -18,8 +18,6 @@
 #define TEMPERATURE_PRECISION 12
 
 // Dial settings
-#define HEAT_CLICKS { 0, 7, 17, 27, 39, 53, 65, 77, 90, 103, 115, 128, 139, 150 }
-#define FLOW_CLICKS { 10, 37, 48, 63, 77, 89, 101, 114, 131, 145 }
 #define MIN_HEAT 0
 #define MAX_HEAT 13
 #define MIN_FLOW 0
@@ -38,6 +36,8 @@ class Heater {
     float heat_dial;
     float flow_dial;
 
+    int heat_clicks[MAX_HEAT - MIN_HEAT + 1];
+    int flow_clicks[MAX_FLOW - MIN_FLOW + 1];
     OneWire oneWire;
     DallasTemperature sensors;
     DialServo heat_dial_servo;
@@ -55,7 +55,7 @@ class Heater {
     void flowOn();
     void flowOff();
     void updateDials(bool force);
-    void traceToSerial();
+    void trace();
 
     void setTempTarget(int temp);
     int getTempTarget();

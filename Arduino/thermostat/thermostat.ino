@@ -27,6 +27,7 @@ void setup() {
 
 void loop() {
   heater.updateDials(false);
+  heater.trace();
   updateLcd();
 
   delay(1 * 1000); // was 5 sec
