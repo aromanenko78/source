@@ -25,7 +25,7 @@ void setup() {
   Serial.println("Ready");
 
   heater.init();
-  encoder.init();
+  encoder.init(25, 10, 40);
 }
 
 void loop() {
