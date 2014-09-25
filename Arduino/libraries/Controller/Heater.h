@@ -51,7 +51,7 @@ class Heater {
 
   public:
     Heater();
-    void init();
+    void init(int target);
     void flowOn();
     void flowOff();
     void updateDials(bool force);

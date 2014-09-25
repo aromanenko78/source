@@ -14,6 +14,7 @@ class Encoder {
   public:
     void init(int initialValue, int minValue, int maxValue);
     bool getButtonPressed();
+    bool getDialChanged();
     int getDialValue();
 };
 #endif

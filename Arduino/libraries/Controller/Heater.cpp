@@ -1,7 +1,7 @@
 #include "Heater.h"
 
 Heater::Heater() : 
-    temp_target(26),
+    temp_target(0),
     max_flow(MAX_FLOW),
     adjustment_counter(0),
     oneWire(ONE_WIRE_BUS),
@@ -40,7 +40,8 @@ Heater::Heater() :
   flow_clicks[9] = 145;
 }
 
-void Heater::init() {
+void Heater::init(int target) {
+  temp_target = target;
   flow_dial_servo.forceSet(0);
 
   delay(3 * 1000);
@@ -67,7 +68,6 @@ void Heater::init() {
 
 void Heater::setTempTarget(int temp) {
   temp_target = float(temp) + .5;
-  updateDials(true);
 }
 
 int Heater::getTempTarget() {
@@ -76,12 +76,10 @@ int Heater::getTempTarget() {
 
 void Heater::flowOn() {
   max_flow = MAX_FLOW;
-  updateDials(true);
 }
 
 void Heater::flowOff() {
   max_flow = MIN_FLOW;
-  updateDials(true);
 }
 
 void Heater::updateDials(bool force) {
@@ -162,7 +160,7 @@ void Heater::updateDials(bool force) {
     adjustment_interval = 1;
   }
   
-  if (adjustment_counter > adjustment_interval) {
+  if (force || adjustment_counter > adjustment_interval) {
     Serial.println("Updating servos");
     adjustment_counter = 0;
     heat_dial_servo.set(heat_dial);

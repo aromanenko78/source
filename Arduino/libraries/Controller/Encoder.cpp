@@ -6,9 +6,10 @@ volatile int counter;
 volatile unsigned long ignore_button_press_until;
 
 volatile bool button_pressed;
-volatile int dialValue;
-int minValue;
-int maxValue;
+volatile bool dial_changed;
+volatile int dial_value;
+int min_value;
+int max_value;
 
 void buttonChanged() {
   unsigned int bn = digitalRead(BUTTON_PIN);
@@ -16,7 +17,7 @@ void buttonChanged() {
   if (b != bn) {
     if (ignore_button_press_until < button_press_time) {
       if (bn == 0) {
-        // TODO: handler B
+        // button
         //Serial.println("button");
         button_pressed = true;
       }
@@ -42,28 +43,32 @@ void encoderChanged() {
 
   if (counter > 1) {
     counter = 0;
-    // TODO: handler R
+    // encoder R
     //Serial.println("encoder r");
-    dialValue++;
-    if (dialValue > maxValue) {
-      dialValue = maxValue;
+    dial_value++;
+    dial_changed = true;
+    if (dial_value > max_value) {
+      dial_value = max_value;
     }
 
   } else if (counter < -1) {
     counter = 0;
-    // TODO: handler L
+    // encoder L
     //Serial.println("encoder l");
-    dialValue--;
-    if (dialValue < minValue) {
-      dialValue = minValue;
+    dial_value--;
+    dial_changed = true;
+    if (dial_value < min_value) {
+      dial_value = min_value;
     }
   }
 }
 
-void Encoder::init(int initialValue, int minValue, int maxValue) {
+void Encoder::init(int initial_value, int min, int max) {
   b = 1;
   p2 = 1;
-  dialValue = initialValue;
+  dial_value = initial_value;
+  max_value = max;
+  min_value = min;
 
   pinMode(BUTTON_PIN, INPUT);
   pinMode(ENCODER_PIN_A, INPUT);
@@ -83,6 +88,14 @@ bool Encoder::getButtonPressed() {
   return false;
 }
 
+bool Encoder::getDialChanged() {
+  if (dial_changed) {
+    dial_changed = false;
+    return true;
+  }
+  return false;
+}
+
 int Encoder::getDialValue() {
-  return dialValue;
+  return dial_value;
 }
