@@ -1,7 +1,7 @@
 #include "Heater.h"
 
 Heater::Heater() : 
-    temp_target(0),
+    temp_target(26),
     max_flow(MAX_FLOW),
     adjustment_counter(0),
     oneWire(ONE_WIRE_BUS),
@@ -90,7 +90,7 @@ void Heater::updateDials(bool force) {
   vent_temp_lpf.apply(sensors.getTempC(ventThermometer), temp_target);
 
   // .4 coefficient is very stable
-  float heat_dial_limited = heat_dial_lpf.getLPF() - .4 * (int_temp_lpf.getError() + vent_temp_lpf.getError() / 2);
+  float heat_dial_limited = heat_dial_lpf.getLPF() - .4 * (int_temp_lpf.getError() + .8 * vent_temp_lpf.getError());
   if (heat_dial_limited > MAX_HEAT_DIAL) {
     heat_dial_limited = MAX_HEAT_DIAL;
   } else if (heat_dial_limited < MIN_HEAT_DIAL) {
