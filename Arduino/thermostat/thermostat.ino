@@ -11,6 +11,8 @@
 #include "LowPassFilter.h"
 #include "MedianFilter.h"
 
+#define TARGET 25
+
 Heater heater;
 Encoder encoder;
 LiquidCrystal lcd(11, 12, 4, 5, 6, 7);
@@ -27,8 +29,8 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Ready");
 
-  heater.init(25);
-  encoder.init(25, 10, 40);
+  heater.init(TARGET);
+  encoder.init(TARGET, 10, 40);
 }
 
 void loop() {
