@@ -113,15 +113,23 @@ void Heater::updateDials(bool force) {
   }
   
   // engine initial warm up correction
+  bool engine_warmup = false;
   if (vent_temp_lpf.getLPF() < temp_target + 10 &&
       heat_dial == MAX_HEAT) {
     float warmup_max_flow = vent_temp_lpf.getLPF() - temp_target;
+    float warmup_max_flow_alt = (vent_temp_lpf.getLPF() - int_temp_lpf.getLPF() - 10) / 2;
+
+    if (warmup_max_flow_alt > warmup_max_flow) {
+      warmup_max_flow = warmup_max_flow_alt;
+    }
+
     if (vent_temp_lpf.getLPF() > int_temp_lpf.getLPF() && warmup_max_flow < 1) {
       warmup_max_flow = 1;
     }
 
     if (flow_dial > warmup_max_flow) {
       flow_dial = warmup_max_flow;
+      engine_warmup = true;
     }
   }
 
@@ -160,14 +168,18 @@ void Heater::updateDials(bool force) {
     adjustment_interval = 1;
   }
   
-  if (force || adjustment_counter > adjustment_interval) {
+  if (force || engine_warmup || adjustment_counter > adjustment_interval) {
     Serial.println("Updating servos");
     adjustment_counter = 0;
-    heat_dial_servo.set(heat_dial);
-    flow_dial_servo.set(flow_dial);
+    if (force || engine_warmup) {
+      heat_dial_servo.setUnfiltered(heat_dial);
+      flow_dial_servo.setUnfiltered(flow_dial);
+    } else {
+      heat_dial_servo.set(heat_dial);
+      flow_dial_servo.set(flow_dial);
+    }
   }
 }
-
 
 int Heater::getIntTemp() {
   return int(int_temp_lpf.getUnfiltered());
