@@ -12,6 +12,8 @@
 #include "MedianFilter.h"
 
 #define TARGET 25
+#define MIN_SETTING 10
+#define MAX_SETTING 40
 
 Heater heater;
 Encoder encoder;
@@ -29,8 +31,8 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Ready");
 
-  heater.init(TARGET);
-  encoder.init(TARGET, 10, 40);
+  heater.init(TARGET, MIN_SETTING, MAX_SETTING);
+  encoder.init(TARGET, MIN_SETTING - 1, MAX_SETTING + 1);
 }
 
 void loop() {
@@ -48,7 +50,13 @@ void loop() {
     }
   } else if (encoder.getDialChanged()) {
     int target = encoder.getDialValue();
-    showTempMessage("SET  ", target);
+    if (target > MAX_SETTING) {
+      showMessage("SET  MAX");
+    } else if (target < MIN_SETTING) {
+      showMessage("SET  MIN");
+    } else {
+      showTempMessage("SET  ", target);
+    }
     heater.setTempTarget(target);
     nextSlowLoop = millis() + 3000;
   } else if (millis() > nextSlowLoop) {

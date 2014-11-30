@@ -32,6 +32,8 @@ class Heater {
     int max_flow;
     int adjustment_counter;
     float stability_score;
+    int min_heat_setting;
+    int max_heat_setting;
 
     float heat_dial;
     float flow_dial;
@@ -51,7 +53,7 @@ class Heater {
 
   public:
     Heater();
-    void init(int target);
+    void init(int target, int min_heat_setting, int max_heat_setting);
     void flowOn();
     void flowOff();
     void updateDials(bool force);

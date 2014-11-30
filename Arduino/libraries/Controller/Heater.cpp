@@ -40,8 +40,10 @@ Heater::Heater() :
   flow_clicks[9] = 145;
 }
 
-void Heater::init(int target) {
+void Heater::init(int target, int min_heat_setting, int max_heat_setting) {
   temp_target = target;
+  this->min_heat_setting = min_heat_setting;
+  this->max_heat_setting = max_heat_setting + 1;
   flow_dial_servo.forceSet(0);
 
   delay(3 * 1000);
@@ -166,6 +168,16 @@ void Heater::updateDials(bool force) {
     adjustment_interval = 2;
   } else {
     adjustment_interval = 1;
+  }
+
+  if (temp_target > this->max_heat_setting) {
+    force = true;
+    heat_dial = MAX_HEAT;
+    flow_dial = MAX_FLOW;
+  } else  if (temp_target < this->min_heat_setting) {
+    force = true;
+    heat_dial = MIN_HEAT;
+    flow_dial = MAX_FLOW;
   }
   
   if (force || engine_warmup || adjustment_counter > adjustment_interval) {
